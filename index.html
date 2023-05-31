@@ -1,0 +1,144 @@
+<html>
+  <head>
+    <title>Abduxoliq Uzoqov</title>
+  </head>
+  <body>
+    <style>
+      
+      @import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap'); body{
+          background-color: #11111d;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          min-height: 100vh;
+          overflow: hidden;
+        }
+        .container{
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+          background-color: #44475a;
+          width: 400px;
+          height: 280px;
+          
+        }
+        #word{
+          color: #e9fa24;
+          font-size: 35px;
+          letter-spacing: 1.2px;
+          font-family: 'Kdam Thmor Pro', sans-serif;
+        }
+        #input_area{
+          width: 60%;
+          font-size: 15px;
+          padding: 10px;
+          background-color: #11111d;
+          color: #fff;
+          border: 1px solid #e9fa24;
+          outline: none;
+          margin: 0 10px 0 36px;
+        }
+        .refresh{         padding: 12px;
+          width: 60px;
+        }
+        .time_section, .score_section{
+          color: #fff;
+          font-size: 18px;
+          font-family: system-ui;
+          font-weight: 600;
+        }
+        .end_game{
+          display: none;
+          background-color: inherit;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 1;
+          color: #fff;
+          font-family: system-ui;
+          font-weight: 600;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center; width: 100%;
+          height: 100%;
+        }
+        .end_game button{
+          background-color: #F4129D;
+          color: #fff;
+          font-size: 20px;
+          padding: 17px;
+          cursor: pointer;
+          border: none;
+        }
+      
+      
+    </style>
+    <div class="container">
+      <h3 id="word"></h3>
+      <div>
+        <input type="number" id="input_area" placeholder="Typing number...">
+        <button class="refresh"onclick="ref()">🔄</button>
+      </div>
+      <p class="time_section">Qolgan vaqt: <span id="time">60s</span></p>
+      <p class="score_section">Ochko: <span id="score">0</span></p>
+      <div class="end_game" id="end_game"></div>
+    </div>
+    <script>
+      const word = document.getElementById('word');
+      const refResh = document.querySelector(".refresh");
+      const text = document.getElementById('input_area');
+      const scoreEl = document.getElementById('score');
+      const timeEl = document.getElementById('time');
+      const endGameEl = document.getElementById('end_game');
+      let rPlus = ["+","-","+","+","-","+","+","-","+","+","-","+"];
+      let natija = 0;
+      let score = 0;
+      let time = 60;
+      const getRandomWord = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+      
+      function ref(){
+        addToDom();
+      }
+      
+
+      function addToDom() {
+        let [num1, num2, index] = [getRandomWord(1,15), getRandomWord(1,15), getRandomWord(1,13)]
+        let operator = rPlus[index];
+        if(num2>num1){
+          [num1, num2] = [num2, num1];
+        }
+        natija = eval(`${num1}${operator}${num2}`);
+        word.innerHTML = `${num1}${operator}${num2}`;
+        
+        natija = natija.toString();
+      }
+      
+      function updateScore() { score++;
+        scoreEl.innerHTML = score;
+      }
+      function updateTime() { time--; timeEl.innerHTML = time + "s";
+        if(time === 0) { clearInterval(timeInterval)
+        gameOver();
+        }
+      }
+      const timeInterval = setInterval(updateTime, 1000);
+      function gameOver() { endGameEl.innerHTML =  `<h1>Vaqting tugadiii!</h1>
+        <h3>Sening ochkoing: ${score}</h3>
+        <button onclick="location.reload()">Yangilash</button>`;
+        endGameEl.style.display = "flex";
+      }
+      addToDom(); 
+      text.addEventListener("input", (e) => {
+        const typedText = e.target.value;
+        if(typedText === natija){
+          addToDom();
+          updateScore();
+          e.target.value = ""; 
+          updateTime();
+      }
+    });
+    </script>
+  </body>
+</html>
